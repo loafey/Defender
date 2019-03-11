@@ -21,7 +21,7 @@ namespace Defender {
             this.blockType = BlockType;
         }
 
-        public float textureScale = 0.0313f;
+        public float textureScale = 0.0313f * 2;
 
         public void Draw() {
             GL.BindTexture(TextureTarget.Texture2D, textureID);
@@ -36,16 +36,6 @@ namespace Defender {
             GL.TexCoord2(x * textureScale, y * textureScale); GL.Vertex2(x, y + height);
             GL.TexCoord2((x + width) * textureScale, y * textureScale); GL.Vertex2(x + width, y + height);
             GL.TexCoord2((x + width) * textureScale, (y + height) * textureScale); GL.Vertex2(x + width, y);
-
-            /*
-            GL.TexCoord2(x, y); GL.Vertex2(x, y+height);
-            GL.TexCoord2(x+width, y + height); GL.Vertex2(x + width, y);
-            GL.TexCoord2(x, y + height); GL.Vertex2(x, y);
-
-            GL.TexCoord2(x, y); GL.Vertex2(x, y + height);
-            GL.TexCoord2(x + width, y); GL.Vertex2(x + width, y + height);
-            GL.TexCoord2(x + width, y + height); GL.Vertex2(x + width, y);
-            */
 
             GL.End();
         }

@@ -11,17 +11,22 @@ using System.Drawing;
 namespace Defender {
     class Game {
         GameWindow mainWindow;
-        Texture2D grassBlock;
-        Texture2D dirtBlock;
-        Texture2D stoneBlock;
-        List<Block> BlockList = new List<Block>();
+
+        Texture2D grassBlockSprite;
+        Texture2D dirtBlockSprite;
+        Texture2D stoneBlockSprite;
+        Texture2D testBlockSprite;
+        Texture2D playerSprite;
+
+        List<Block> blockList = new List<Block>();
+        List<Player> playerList = new List<Player>();
 
         float cameraX = 0,
               cameraY = 0;
         float cameraXSpeed = 0,
               cameraYSpeed = 0;
-        float zoom = 1f,
-              zoomZ = 1f;
+        private float zoom = 1f;
+        private float zoomZ = 1f;
 
         public Game(GameWindow mainWindow) {
             this.mainWindow = mainWindow;
@@ -44,12 +49,16 @@ namespace Defender {
         private void MainWindow_KeyUp(object sender, KeyboardKeyEventArgs e) {}
 
         private void TextureInit() {
-            grassBlock = ContentPipe.LoadTexture("Content/grass.png");
-            dirtBlock = ContentPipe.LoadTexture("Content/dirt.png");
-            stoneBlock = ContentPipe.LoadTexture("Content/stone.png");
+            grassBlockSprite = ContentPipe.LoadTexture("Content/grass.png");
+            dirtBlockSprite = ContentPipe.LoadTexture("Content/dirt.png");
+            stoneBlockSprite = ContentPipe.LoadTexture("Content/stone.png");
+            testBlockSprite = ContentPipe.LoadTexture("Content/testTexture.png");
+            playerSprite = ContentPipe.LoadTexture("Content/Player.png");
         }
 
         private void MainWindow_Load(object sender, EventArgs e) {
+            zoom += 0; zoomZ += 0; //just here to trick vs so it doesn't tell me to make them readonly.
+
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
@@ -60,35 +69,38 @@ namespace Defender {
 
             TextureInit();
             int gridSize = 16;
+            int landLength = 128;
+            int landStartingHeight = 256;
+            int landHeight = 512;
+            int dirtHeight = landHeight / 14;
 
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0,gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
 
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0, gridSize), MathExtra.GridLocation(2, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(3, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(5, gridSize), MathExtra.GridLocation(2, gridSize), grassBlockSprite.ID, "Grass"));
 
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0, gridSize), MathExtra.GridLocation(2, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(3, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(5, gridSize), MathExtra.GridLocation(2, gridSize), grassBlock.ID, "Grass"));
+            playerList.Add(new Player(0, 0, 16, 16, playerSprite.ID));
 
-            Random r = new Random();
+            Random random = new Random();
 
-            for (int i = 0; i < 2048; i += gridSize) {
-                float sinY = 256 + (float)Math.Sin(i) * r.Next(0,64);
+            for (int i = 0; i < landLength; i += 1) {
+                float sinY = landStartingHeight + (float)Math.Sin(i) * random.Next(0, 24);
                 float yHeight = sinY - (sinY % gridSize);
-                Console.WriteLine("{0}:{1}", sinY, yHeight);
 
-                BlockList.Add(new Block(gridSize, gridSize, i, yHeight, grassBlock.ID, "Grass"));
+                blockList.Add(new Block(gridSize, gridSize, i * gridSize, yHeight, grassBlockSprite.ID, "Grass"));
 
-                /*for (int z = (int)yHeight + gridSize; z < 2048; z += gridSize) {
-                    if(z < (int)yHeight + 256) { 
-                        BlockList.Add(new Block(gridSize, gridSize, i, z, dirtBlock.ID, "Dirt"));
+                for (int z = (int)yHeight + gridSize; z < landHeight; z += gridSize) {
+                    if (z < (int)yHeight + dirtHeight) {
+                        blockList.Add(new Block(gridSize, gridSize, i * gridSize, z, dirtBlockSprite.ID, "dirt"));
                     } else {
-                        BlockList.Add(new Block(gridSize, gridSize, i, z, stoneBlock.ID, "Stone"));
+                        blockList.Add(new Block(gridSize, gridSize, i * gridSize, z, stoneBlockSprite.ID, "stone"));
                     }
-                }*/
+                }
             }
         }
 
@@ -113,20 +125,6 @@ namespace Defender {
             cameraXSpeed = MathExtra.Lerp(cameraXSpeed, 0, 0.1f);
             cameraYSpeed = MathExtra.Lerp(cameraYSpeed, 0, 0.1f);
 
-            if (keyState.IsKeyDown(Key.Up)) {
-                zoom += 0.005f;
-            }
-            if (keyState.IsKeyDown(Key.Down)) {
-                zoom -= 0.005f;
-            }
-
-            if (keyState.IsKeyDown(Key.Left)) {
-                zoomZ += 0.005f;
-            }
-            if (keyState.IsKeyDown(Key.Right)) {
-                zoomZ -= 0.005f;
-            }
-
             cameraX += cameraXSpeed; cameraY += cameraYSpeed;
 
             if(keyState.IsKeyDown(Key.Escape) && lastKeyState.IsKeyUp(Key.Escape)) {
@@ -138,6 +136,10 @@ namespace Defender {
                 Console.WriteLine("Enter down!");}
             if (keyState.IsKeyUp(Key.Enter) && lastKeyState.IsKeyDown(Key.Enter)) {
                 Console.WriteLine("Enter up!");
+            }
+
+            foreach (Player player in playerList) {
+                player.Update(keyState);
             }
 
             lastKeyState = keyState;
@@ -168,8 +170,12 @@ namespace Defender {
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelViewMatrix);
 
-            foreach(Block block in BlockList) {
+            foreach(Block block in blockList) {
                 block.Draw();
+            }
+
+            foreach(Player player in playerList) {
+                player.Draw();
             }
 
             mainWindow.SwapBuffers();

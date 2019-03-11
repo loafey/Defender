@@ -10,5 +10,9 @@ namespace Defender {
         public static float Lerp(float n, float goal, float multiplier) {
             return n * (1 - multiplier) + goal * multiplier;
         }
+
+        public static float GridLocation(int n, int size) {
+            return n * size;
+        }
     }
 }

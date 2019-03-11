@@ -32,11 +32,22 @@ namespace Defender {
             mainWindow.KeyDown += MainWindow_KeyDown;
             mainWindow.KeyPress += MainWindow_KeyPress;
             mainWindow.KeyUp += MainWindow_KeyUp;
+            mainWindow.Resize += MainWindow_Resize;
+        }
+
+        private void MainWindow_Resize(object sender, EventArgs e) {
+            Console.WriteLine("gay");
         }
 
         private void MainWindow_KeyPress(object sender, KeyPressEventArgs e) {}
         private void MainWindow_KeyDown(object sender, KeyboardKeyEventArgs e) {}
         private void MainWindow_KeyUp(object sender, KeyboardKeyEventArgs e) {}
+
+        private void TextureInit() {
+            grassBlock = ContentPipe.LoadTexture("Content/grass.png");
+            dirtBlock = ContentPipe.LoadTexture("Content/dirt.png");
+            stoneBlock = ContentPipe.LoadTexture("Content/stone.png");
+        }
 
         private void MainWindow_Load(object sender, EventArgs e) {
             GL.Enable(EnableCap.Blend);
@@ -47,38 +58,37 @@ namespace Defender {
 
             GL.Enable(EnableCap.Texture2D);
 
-            grassBlock = ContentPipe.LoadTexture("Content/grass.png");
-            dirtBlock = ContentPipe.LoadTexture("Content/dirt.png");
-            stoneBlock = ContentPipe.LoadTexture("Content/stone.png");
+            TextureInit();
+            int gridSize = 16;
 
-            BlockList.Add(new Block(32, 32, 0.0f, 0.0f, grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0,gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
 
-            BlockList.Add(new Block(32, 32, 32.0f, 0.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 128.0f, 0.0f, grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlock.ID, "Grass"));
 
-            BlockList.Add(new Block(32, 32, 0.0f, 64.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 32.0f, 96.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 64.0f, 96.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 96.0f, 96.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 128.0f, 96.0f, grassBlock.ID, "Grass"));
-            BlockList.Add(new Block(32, 32, 160.0f, 64.0f, grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0, gridSize), MathExtra.GridLocation(2, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(3, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(3, gridSize), grassBlock.ID, "Grass"));
+            BlockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(5, gridSize), MathExtra.GridLocation(2, gridSize), grassBlock.ID, "Grass"));
 
             Random r = new Random();
 
-            for (int i = 0; i < 2048; i += 32) {
-                float gridSnap = 32;
-                float sinY = 256 + (float)Math.Sin(i) * r.Next(0,96);
-                float yHeight = sinY - (sinY % gridSnap);
+            for (int i = 0; i < 2048; i += gridSize) {
+                float sinY = 256 + (float)Math.Sin(i) * r.Next(0,64);
+                float yHeight = sinY - (sinY % gridSize);
+                Console.WriteLine("{0}:{1}", sinY, yHeight);
 
-                BlockList.Add(new Block(32, 32, i, yHeight, grassBlock.ID, "Grass"));
+                BlockList.Add(new Block(gridSize, gridSize, i, yHeight, grassBlock.ID, "Grass"));
 
-                for (int z = (int)yHeight + 32; z < 2048; z += 32) {
+                /*for (int z = (int)yHeight + gridSize; z < 2048; z += gridSize) {
                     if(z < (int)yHeight + 256) { 
-                        BlockList.Add(new Block(32, 32, i, z, dirtBlock.ID, "Dirt"));
+                        BlockList.Add(new Block(gridSize, gridSize, i, z, dirtBlock.ID, "Dirt"));
                     } else {
-                        BlockList.Add(new Block(32, 32, i, z, stoneBlock.ID, "Stone"));
+                        BlockList.Add(new Block(gridSize, gridSize, i, z, stoneBlock.ID, "Stone"));
                     }
-                }
+                }*/
             }
         }
 
@@ -138,7 +148,16 @@ namespace Defender {
             GL.ClearDepth(1);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            Matrix4 projMatrix = Matrix4.CreateOrthographicOffCenter(0, mainWindow.Width, mainWindow.Height, 0, 0, 1);
+            Matrix4 projMatrix = Matrix4.CreateOrthographicOffCenter(
+                mainWindow.Width / 2,
+                mainWindow.Width,
+                mainWindow.Height,
+                mainWindow.Height / 2,
+                0,
+                1
+            );
+            //Matrix4 projMatrix = Matrix4.CreateOrthographic(mainWindow.Width, mainWindow.Height, 0, 1);
+            //Console.WriteLine("{0} : {1}", mainWindow.Width, mainWindow.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projMatrix);
 

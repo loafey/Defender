@@ -8,8 +8,9 @@ namespace Defender {
     class Program {
         static void Main(string[] args) {
             Console.WriteLine("Using OpenTK: 3.010");
-            OpenTK.GameWindow mainWindow = new OpenTK.GameWindow(800, 600, new OpenTK.Graphics.GraphicsMode(32, 8, 0 , 0));
-            mainWindow.Title = "Defender";
+            OpenTK.GameWindow mainWindow = new OpenTK.GameWindow(800, 600, new OpenTK.Graphics.GraphicsMode(32, 8, 0, 0)) {
+                Title = "Defender"
+            };
 
             Game game = new Game(mainWindow);
 

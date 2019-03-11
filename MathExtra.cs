@@ -19,8 +19,12 @@ namespace Defender {
             return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
 
-        public static float GetDistanceAxis(float n1, float n2) {
+        public static float GetDistanceAxisAbs(float n1, float n2) {
             return Math.Abs(n1 - n2);
+        }
+
+        public static float GetDistanceAxis(float n1, float n2) {
+            return n1 - n2;
         }
 
         //Currently not implemted due to buggy nature, replaced by GetDistance

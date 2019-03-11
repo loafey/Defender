@@ -59,6 +59,12 @@ namespace Defender {
                 speedX += 0.5f;
             }
 
+            if (keyboardState.IsKeyDown(Key.Space)) {
+                if (onGround) {
+                    speedY -= 2;
+                }
+            }
+
             speedX = MathHelper.Clamp(speedX, -5, 5);
             speedX = MathExtra.Lerp(speedX, 0, 0.2f);
 
@@ -66,7 +72,6 @@ namespace Defender {
                 foreach(Block block in blocks) {
                     if(MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
                         if (MathExtra.GetDistanceAxis(this.y, block.y) < 1 && MathExtra.GetDistanceAxis(this.y, block.y) > -1) {
-                            Console.WriteLine(MathExtra.GetDistanceAxis(this.x, block.x));
                             speedX = 0;
                             break;
                         }
@@ -78,7 +83,6 @@ namespace Defender {
                 foreach (Block block in blocks) {
                     if (MathExtra.GetDistanceAxis(this.x, block.x) > -14 && MathExtra.GetDistanceAxis(this.x, block.x) < 14) {
                         if (MathExtra.GetDistanceAxis(this.y, block.y) < 1 && MathExtra.GetDistanceAxis(this.y, block.y) > -1) {
-                            Console.WriteLine(MathExtra.GetDistanceAxis(this.x, block.x));
                             speedX = 0;
                             break;
                         }
@@ -86,33 +90,18 @@ namespace Defender {
                 }
             }
 
-
-            //Console.WriteLine(speedX);
-
-            /*
-            if (speedX > 0) {
-                foreach (Block block in blocks) {
-                    if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 4 && MathExtra.GetDistanceAxisAbs(this.y, block.y) > -4) {
-                        //Console.WriteLine("y " + MathExtra.GetDistanceAxis(this.y, block.y));
-                        Console.WriteLine("x " + MathExtra.GetDistanceAxisAbs(this.x, block.x));
-                        if (MathExtra.GetDistanceAxisAbs(this.x, block.x) < 8) {
-                            speedX = 0;
-                            break;
-                        }
-                    }
-                }
-            }*/
-
             x += speedX;
 
             foreach(Block block in blocks) {
-                //if(MathExtra.GetDistance(this.x, this.y, block.x, block.y) < 17) {
-                if(MathExtra.GetDistanceAxisAbs(this.x, block.x) < 8){
+                if(MathExtra.GetDistanceAxis(this.x, block.x) < 14){
                     if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-                        //Console.WriteLine(MathExtra.GetDistanceAxisAbs(this.x, block.x));
+                        Console.WriteLine(MathExtra.GetDistanceAxis(this.x, block.x));
                         speedY = 0;
+                        onGround = true;
                         this.y = block.y - this.height;
                         break;
+                    } else {
+                        onGround = false;
                     }
                 }
             }

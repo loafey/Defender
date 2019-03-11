@@ -41,7 +41,7 @@ namespace Defender {
         }
 
         private void MainWindow_Resize(object sender, EventArgs e) {
-            Console.WriteLine("gay");
+            Console.WriteLine("Resize");
         }
 
         private void MainWindow_KeyPress(object sender, KeyPressEventArgs e) {}
@@ -92,7 +92,7 @@ namespace Defender {
                 float sinY = landStartingHeight + (float)Math.Sin(i) * random.Next(0, 24);
                 float yHeight = sinY - (sinY % gridSize);
 
-                blockList.Add(new Block(gridSize, gridSize, i * gridSize, yHeight, grassBlockSprite.ID, "Grass"));
+                blockList.Add(new Block(gridSize, gridSize, i * gridSize, yHeight, grassBlockSprite.ID, "Grass" + i));
 
                 for (int z = (int)yHeight + gridSize; z < landHeight; z += gridSize) {
                     if (z < (int)yHeight + dirtHeight) {
@@ -139,7 +139,7 @@ namespace Defender {
             }
 
             foreach (Player player in playerList) {
-                player.Update(keyState);
+                player.Update(keyState, blockList);
             }
 
             lastKeyState = keyState;

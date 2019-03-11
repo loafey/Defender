@@ -44,7 +44,8 @@ namespace Defender {
             GL.End();
         }
 
-        public void Update(KeyboardState keyboardState) {
+        public void Update(KeyboardState keyboardState, List<Block> blocks) {
+
             if (!onGround) {
                 speedY += gravityForce;
             } else {
@@ -52,18 +53,50 @@ namespace Defender {
             }
 
             if (keyboardState.IsKeyDown(Key.Left)) {
-                speedX -= 1;
+                foreach (Block block in blocks) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
+                        if(MathExtra.GetDistanceAxis(this.y, block.y) < 10){
+                            speedX = 0;
+                            x += 1;
+                            break;
+                        }
+                    } else {
+                        speedX -= 0.1f;
+                        //break;
+                    }
+                }
             }
             if (keyboardState.IsKeyDown(Key.Right)) {
-                speedX += 1;
+                foreach (Block block in blocks) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 10) {
+                            speedX = 0;
+                            x -= 1;
+                            break;
+                        }
+                    } else {
+                        speedX += 0.1f;
+                        //break;
+                    }
+                }
             }
 
-            speedX = MathHelper.Clamp(speedX, -10, 10);
+            speedX = MathHelper.Clamp(speedX, -5, 5);
             speedX = MathExtra.Lerp(speedX, 0, 0.2f);
 
             x += speedX;
 
-            //y += speedY;
+            foreach(Block block in blocks) {
+                //if(MathExtra.GetDistance(this.x, this.y, block.x, block.y) < 17) {
+                if(MathExtra.GetDistanceAxis(this.x, block.x) < 8){
+                    if (MathExtra.GetDistanceAxis(this.y, block.y) < 16) {
+                        speedY = 0;
+                        this.y = block.y - this.height;
+                    }
+                }
+            }
+
+            y += speedY;
         }
     }
 }

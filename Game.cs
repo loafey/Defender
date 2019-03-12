@@ -115,22 +115,18 @@ namespace Defender {
             if (keyState.IsKeyDown(Key.Right)) {
                 cameraXSpeed += 1;
                 cameraOffsetX++;
-                Console.WriteLine("X:" + cameraOffsetX);
             }
             if (keyState.IsKeyDown(Key.Left)) {
                 cameraXSpeed -= 1;
                 cameraOffsetX--;
-                Console.WriteLine("X:" + cameraOffsetX);
             }
             if (keyState.IsKeyDown(Key.Up)) {
                 cameraYSpeed += 1;
                 cameraOffsetY++;
-                Console.WriteLine("Y:" + cameraOffsetY);
             }
             if (keyState.IsKeyDown(Key.Down)) {
                 cameraYSpeed -= 1;
                 cameraOffsetY--;
-                Console.WriteLine("Y:" + cameraOffsetY);
             }
             cameraXSpeed = MathHelper.Clamp(cameraXSpeed, -10, 10);
             cameraYSpeed = MathHelper.Clamp(cameraYSpeed, -10, 10);
@@ -157,7 +153,7 @@ namespace Defender {
             }
 
             foreach (Player player in playerList) {
-                player.Update(keyState, blockList, testBlockSprite, grassBlockSprite);
+                player.Update(keyState, blockList);
             }
 
             lastKeyState = keyState;

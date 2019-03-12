@@ -20,7 +20,7 @@ namespace Defender {
             this.textureID = TextureID;
         }
 
-        public bool onGround = false;
+        public bool onGround = false; 
         public float gravityForce = 0.0982f;
         public float speedX = 0;
         public float speedY = 0;
@@ -44,7 +44,7 @@ namespace Defender {
             GL.End();
         }
 
-        public void Update(KeyboardState keyboardState, List<Block> blocks, Texture2D testTexture, Texture2D testTexture2) {
+        public void Update(KeyboardState keyboardState, List<Block> blocks) {
             if (keyboardState.IsKeyDown(Key.A)) {
                 speedX -= 0.5f;
             }
@@ -58,7 +58,7 @@ namespace Defender {
             if(speedX < 0) {
                 foreach(Block block in blocks) {
                     if(MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
-                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 8 && MathExtra.GetDistanceAxis(this.y, block.y) > -8) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
                             speedX = 0;
                             break;
                         }
@@ -69,7 +69,7 @@ namespace Defender {
             if (speedX > 0) {
                 foreach (Block block in blocks) {
                     if (MathExtra.GetDistanceAxis(this.x, block.x) > -14 && MathExtra.GetDistanceAxis(this.x, block.x) < 14) {
-                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 8 && MathExtra.GetDistanceAxis(this.y, block.y) > -8) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
                             speedX = 0;
                             break;
                         }
@@ -80,17 +80,15 @@ namespace Defender {
             x += speedX;
 
             foreach(Block block in blocks) {
-                if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
+                if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 12) {
                     if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-                        block.textureID = testTexture.ID;
-                        //Console.WriteLine(MathExtra.GetDistanceAxisAbs(this.y, block.y));
                         speedY = 0;
                         onGround = true;
-                        this.y = block.y - this.height - 0.001f;
+                        if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 16) {
+                            this.y = block.y - this.height - 0.001f;
+                        }
                         break;
                     } else {
-                        //set texture to grass;
-                        block.textureID = testTexture2.ID;
                         onGround = false;
                     }
                 }
@@ -108,15 +106,12 @@ namespace Defender {
                 }
             }
 
-
             if (speedY != 0) {
                 onGround = false;
             } else {
                 onGround = true;
             }
             
-            //Console.WriteLine(onGround);
-
             y += speedY;
         }
     }

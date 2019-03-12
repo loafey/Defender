@@ -69,14 +69,14 @@ namespace Defender {
 
             TextureInit();
             int gridSize = 16;
-            int landLength = 128;
+            int landLength = 16;
             int landStartingHeight = 256;
             int landHeight = 512;
             int dirtHeight = landHeight / 14;
 
 
-            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
-            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            //blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            //blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0, gridSize), MathExtra.GridLocation(2, gridSize), grassBlockSprite.ID, "Grass"));
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(3, gridSize), grassBlockSprite.ID, "Grass"));
@@ -125,9 +125,12 @@ namespace Defender {
             cameraXSpeed = MathExtra.Lerp(cameraXSpeed, 0, 0.1f);
             cameraYSpeed = MathExtra.Lerp(cameraYSpeed, 0, 0.1f);
 
-            cameraX += cameraXSpeed; cameraY += cameraYSpeed;
+            //cameraX += cameraXSpeed; cameraY += cameraYSpeed;
+            //cameraX = playerList[0].x + playerList[0].width / 2;
+            //cameraY = playerList[0].y + playerList[0].height / 2;
 
-            if(keyState.IsKeyDown(Key.Escape) && lastKeyState.IsKeyUp(Key.Escape)) {
+
+            if (keyState.IsKeyDown(Key.Escape) && lastKeyState.IsKeyUp(Key.Escape)) {
                 Console.WriteLine("Escape!");
                 mainWindow.Exit();
             }
@@ -139,7 +142,7 @@ namespace Defender {
             }
 
             foreach (Player player in playerList) {
-                player.Update(keyState, blockList);
+                player.Update(keyState, blockList, testBlockSprite, grassBlockSprite);
             }
 
             lastKeyState = keyState;

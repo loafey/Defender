@@ -20,6 +20,8 @@ namespace Defender {
             this.textureID = TextureID;
         }
 
+        private bool singleSpacePress = false;
+
         public bool onGround = false; 
         public float gravityForce = 0.0982f;
         public float speedX = 0;
@@ -82,10 +84,9 @@ namespace Defender {
             foreach(Block block in blocks) {
                 if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 12) {
                     if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-                        speedY = 0;
                         onGround = true;
                         if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 16) {
-                            this.y = block.y - this.height - 0.001f;
+                            this.y = block.y - this.height;
                         }
                         break;
                     } else {
@@ -100,10 +101,13 @@ namespace Defender {
                 speedY = 0;
             }
 
-            if (keyboardState.IsKeyDown(Key.Space)) {
-                if (onGround) {
-                    speedY -= 2;
-                }
+            if (keyboardState.IsKeyUp(Key.Space)) {
+                singleSpacePress = false;
+            }
+
+            if (!singleSpacePress && keyboardState.IsKeyDown(Key.Space) && onGround) {
+                singleSpacePress = true;
+                speedY -= 2;
             }
 
             if (speedY != 0) {

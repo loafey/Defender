@@ -45,10 +45,10 @@ namespace Defender {
         }
 
         public void Update(KeyboardState keyboardState, List<Block> blocks, Texture2D testTexture, Texture2D testTexture2) {
-            if (keyboardState.IsKeyDown(Key.Left)) {
+            if (keyboardState.IsKeyDown(Key.A)) {
                 speedX -= 0.5f;
             }
-            if (keyboardState.IsKeyDown(Key.Right)) {
+            if (keyboardState.IsKeyDown(Key.D)) {
                 speedX += 0.5f;
             }
 
@@ -83,7 +83,7 @@ namespace Defender {
                 if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
                     if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
                         block.textureID = testTexture.ID;
-                        Console.WriteLine(MathExtra.GetDistanceAxisAbs(this.y, block.y));
+                        //Console.WriteLine(MathExtra.GetDistanceAxisAbs(this.y, block.y));
                         speedY = 0;
                         onGround = true;
                         this.y = block.y - this.height - 0.001f;

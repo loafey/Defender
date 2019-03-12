@@ -21,12 +21,16 @@ namespace Defender {
         List<Block> blockList = new List<Block>();
         List<Player> playerList = new List<Player>();
 
+        bool freeCam = false;
+
         float cameraX = 0,
               cameraY = 0;
         float cameraXSpeed = 0,
               cameraYSpeed = 0;
         private float zoom = 1f;
         private float zoomZ = 1f;
+
+        int cameraOffsetX = 0; int cameraOffsetY = 0;
 
         public Game(GameWindow mainWindow) {
             this.mainWindow = mainWindow;
@@ -69,7 +73,7 @@ namespace Defender {
 
             TextureInit();
             int gridSize = 16;
-            int landLength = 16;
+            int landLength = 256;
             int landStartingHeight = 256;
             int landHeight = 512;
             int dirtHeight = landHeight / 14;
@@ -108,26 +112,37 @@ namespace Defender {
         private void MainWindow_UpdateFrame(object sender, FrameEventArgs e) {
             KeyboardState keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Key.A)) {
+            if (keyState.IsKeyDown(Key.Right)) {
                 cameraXSpeed += 1;
+                cameraOffsetX++;
+                Console.WriteLine("X:" + cameraOffsetX);
             }
-            if (keyState.IsKeyDown(Key.D)) {
+            if (keyState.IsKeyDown(Key.Left)) {
                 cameraXSpeed -= 1;
+                cameraOffsetX--;
+                Console.WriteLine("X:" + cameraOffsetX);
             }
-            if (keyState.IsKeyDown(Key.W)) {
+            if (keyState.IsKeyDown(Key.Up)) {
                 cameraYSpeed += 1;
+                cameraOffsetY++;
+                Console.WriteLine("Y:" + cameraOffsetY);
             }
-            if (keyState.IsKeyDown(Key.S)) {
+            if (keyState.IsKeyDown(Key.Down)) {
                 cameraYSpeed -= 1;
+                cameraOffsetY--;
+                Console.WriteLine("Y:" + cameraOffsetY);
             }
             cameraXSpeed = MathHelper.Clamp(cameraXSpeed, -10, 10);
             cameraYSpeed = MathHelper.Clamp(cameraYSpeed, -10, 10);
             cameraXSpeed = MathExtra.Lerp(cameraXSpeed, 0, 0.1f);
             cameraYSpeed = MathExtra.Lerp(cameraYSpeed, 0, 0.1f);
 
-            //cameraX += cameraXSpeed; cameraY += cameraYSpeed;
-            //cameraX = playerList[0].x + playerList[0].width / 2;
-            //cameraY = playerList[0].y + playerList[0].height / 2;
+            if (freeCam) {
+                cameraX += cameraXSpeed; cameraY += cameraYSpeed;
+            } else {
+                cameraX = -1 * playerList[0].x + mainWindow.Width / 2 + cameraOffsetX + (mainWindow.Width / 4 - playerList[0].width / 2);// + playerList[0].width / 2;
+                cameraY = -1 * playerList[0].y + mainWindow.Height / 2 + cameraOffsetY + (mainWindow.Height / 4 - playerList[0].height / 2);// + playerList[0].height / 2;
+            }
 
 
             if (keyState.IsKeyDown(Key.Escape) && lastKeyState.IsKeyUp(Key.Escape)) {

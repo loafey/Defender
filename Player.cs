@@ -27,6 +27,8 @@ namespace Defender {
         public float speedX = 0;
         public float speedY = 0;
 
+        Random r = new Random();
+
         public float textureScale = -0.0313f * 2;
 
         public void Draw() {
@@ -46,6 +48,82 @@ namespace Defender {
             GL.End();
         }
 
+        void Collision(List<Block> blocks) {
+            foreach(Block block in blocks) {
+                if(MathExtra.PlayerBlockAABB(this, block)) {
+                    //Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width/2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
+                    if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
+                        if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
+                            //Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
+                            bool direction; //false = left; true = right;
+                            if(MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
+                                direction = false;
+                            } else {
+                                direction = true;
+                            }
+                            if (speedX > 0 && !direction) {
+                                Console.WriteLine("Why can i move");
+                                speedX = 0;
+                            }else if (speedX < 0 && direction) {
+                                speedX = 0;
+                            }
+                        }
+                    }
+
+                    Console.WriteLine("Collision!");
+
+                    if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
+                        this.y = block.y - this.height;
+                        onGround = true;
+                        break;
+                    }
+                } else {
+                    onGround = false;
+                }
+            }
+            x += speedX;
+            //if (speedX < 0) {
+            //    foreach (Block block in blocks) {
+            //        if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
+            //            if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
+            //                speedX = 0;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //if (speedX > 0) {
+            //    foreach (Block block in blocks) {
+            //        if (MathExtra.GetDistanceAxis(this.x, block.x) > -14 && MathExtra.GetDistanceAxis(this.x, block.x) < 14) {
+            //            if (MathExtra.GetDistanceAxis(this.y, block.y) < 14 && MathExtra.GetDistanceAxis(this.y, block.y) > -14) {
+            //                speedX = 0;
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
+
+            //foreach (Block block in blocks) {
+            //    if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
+            //        if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
+            //            if (speedY > 0) {
+            //                onGround = true;
+            //                if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 16) {
+            //                    this.y = block.y - this.height;
+            //                }
+            //                break;
+            //            } else {
+            //                speedY = 0f;
+            //                break;
+            //            }
+            //        } else {
+            //            onGround = false;
+            //        }
+            //    }
+            //}
+        }
+
         public void Update(KeyboardState keyboardState, List<Block> blocks) {
             if (keyboardState.IsKeyDown(Key.A)) {
                 speedX -= 0.5f;
@@ -57,43 +135,7 @@ namespace Defender {
             speedX = MathHelper.Clamp(speedX, -5, 5);
             speedX = MathExtra.Lerp(speedX, 0, 0.2f);
 
-            if(speedX < 0) {
-                foreach(Block block in blocks) {
-                    if(MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
-                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
-                            speedX = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (speedX > 0) {
-                foreach (Block block in blocks) {
-                    if (MathExtra.GetDistanceAxis(this.x, block.x) > -14 && MathExtra.GetDistanceAxis(this.x, block.x) < 14) {
-                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
-                            speedX = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            x += speedX;
-
-            foreach(Block block in blocks) {
-                if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 12) {
-                    if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-                        onGround = true;
-                        if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 16) {
-                            this.y = block.y - this.height;
-                        }
-                        break;
-                    } else {
-                        onGround = false;
-                    }
-                }
-            }
+            Collision(blocks);
 
             if (!onGround) {
                 speedY += gravityForce;

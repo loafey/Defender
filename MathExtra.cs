@@ -27,6 +27,17 @@ namespace Defender {
             return n1 - n2;
         }
 
+        public static bool PlayerBlockAABB(Player player, Block block) {
+            if(player.x < block.x + block.width &&
+                player.x + player.width > block.x &&
+                player.y < block.y + block.height &&
+                player.y  + player.height > block.y) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         //Currently not implemted due to buggy nature, replaced by GetDistance
         /*public static bool checkCollisionPlayerBlock(Player player, Block block) {
             if(Math.Abs(player.x - block.x ) < player.width + block.width ) {

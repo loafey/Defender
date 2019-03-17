@@ -113,22 +113,22 @@ namespace Defender {
         private void MainWindow_UpdateFrame(object sender, FrameEventArgs e) {
             KeyboardState keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Key.Right)) {
-                cameraXSpeed += 1;
-                cameraOffsetX++;
-            }
-            if (keyState.IsKeyDown(Key.Left)) {
-                cameraXSpeed -= 1;
-                cameraOffsetX--;
-            }
-            if (keyState.IsKeyDown(Key.Up)) {
-                cameraYSpeed += 1;
-                cameraOffsetY++;
-            }
-            if (keyState.IsKeyDown(Key.Down)) {
-                cameraYSpeed -= 1;
-                cameraOffsetY--;
-            }
+            //if (keyState.IsKeyDown(Key.Right)) {
+            //    cameraXSpeed += 1;
+            //    cameraOffsetX++;
+            //}
+            //if (keyState.IsKeyDown(Key.Left)) {
+            //    cameraXSpeed -= 1;
+            //    cameraOffsetX--;
+            //}
+            //if (keyState.IsKeyDown(Key.Up)) {
+            //    cameraYSpeed += 1;
+            //    cameraOffsetY++;
+            //}
+            //if (keyState.IsKeyDown(Key.Down)) {
+            //    cameraYSpeed -= 1;
+            //    cameraOffsetY--;
+            //}
             cameraXSpeed = MathHelper.Clamp(cameraXSpeed, -10, 10);
             cameraYSpeed = MathHelper.Clamp(cameraYSpeed, -10, 10);
             cameraXSpeed = MathExtra.Lerp(cameraXSpeed, 0, 0.1f);

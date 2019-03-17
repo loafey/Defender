@@ -29,99 +29,104 @@ namespace Defender {
 
         Random r = new Random();
 
-        public float textureScale = -0.0313f * 2;
+        //public float textureScale = -0.0313f * 2;
 
         public void Draw() {
+            float textureScale = this.width / (-this.width * this.width);
+
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.Begin(PrimitiveType.Triangles);
 
             GL.Color4(1f, 1f, 1f, 1f);
 
-            GL.TexCoord2(1 * textureScale,              y * textureScale);                       GL.Vertex2(x, y + height);
-            GL.TexCoord2((1 + width) * textureScale,    (y + height) * textureScale);            GL.Vertex2(x + width, y);
-            GL.TexCoord2(1 * textureScale,              (y + height) * textureScale);            GL.Vertex2(x, y);
+            GL.TexCoord2(textureScale, textureScale);                       GL.Vertex2(x, y + height);
+            GL.TexCoord2(width * textureScale, height * textureScale);      GL.Vertex2(x + width, y);
+            GL.TexCoord2(textureScale, height * textureScale);              GL.Vertex2(x, y);
 
-            GL.TexCoord2(1 * textureScale,              y * textureScale);                       GL.Vertex2(x, y + height);
-            GL.TexCoord2((1 + width) * textureScale,    y * textureScale);                       GL.Vertex2(x + width, y + height);
-            GL.TexCoord2((1 + width) * textureScale,    (y + height) * textureScale);            GL.Vertex2(x + width, y);
+            GL.TexCoord2(textureScale, textureScale);                       GL.Vertex2(x, y + height);
+            GL.TexCoord2(width * textureScale, textureScale);               GL.Vertex2(x + width, y + height);
+            GL.TexCoord2(width * textureScale, height * textureScale);      GL.Vertex2(x + width, y);
 
             GL.End();
         }
 
         void Collision(List<Block> blocks) {
-            foreach(Block block in blocks) {
-                if(MathExtra.PlayerBlockAABB(this, block)) {
-                    //Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width/2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
-                    if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
-                        if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
-                            //Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
-                            bool direction; //false = left; true = right;
-                            if(MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
-                                direction = false;
-                            } else {
-                                direction = true;
-                            }
-                            if (speedX > 0 && !direction) {
-                                Console.WriteLine("Why can i move");
-                                speedX = 0;
-                            }else if (speedX < 0 && direction) {
-                                speedX = 0;
-                            }
+            //foreach(Block block in blocks) {
+            //    if(MathExtra.PlayerBlockAABB(this, block)) {
+            //        Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width/2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
+            //        if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
+            //            if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
+            //                Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
+            //                bool direction; //false = left; true = right;
+            //                if(MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
+            //                    direction = false;
+            //                } else {
+            //                    direction = true;
+            //                }
+            //                if (speedX > 0 && !direction) {
+            //                    Console.WriteLine("Why can i move");
+            //                    speedX = 0;
+            //                }
+            //                if (speedX < 0 && direction) {
+            //                    speedX = 0;
+            //                }
+            //            }
+            //        }
+
+            //        Console.WriteLine("Collision!");
+
+            //        if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
+            //            this.y = block.y - this.height;
+            //            onGround = true;
+            //            break;
+            //        }
+            //    } else {
+            //        onGround = false;
+            //    }
+            //}
+            //x += speedX;
+            if (speedX < 0) {
+                foreach (Block block in blocks) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
+                            speedX = 0;
+                            break;
                         }
                     }
+                }
+            }
 
-                    Console.WriteLine("Collision!");
-
-                    if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
-                        this.y = block.y - this.height;
-                        onGround = true;
-                        break;
+            if (speedX > 0) {
+                foreach (Block block in blocks) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) > -15 && MathExtra.GetDistanceAxis(this.x, block.x) < 15) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 14 && MathExtra.GetDistanceAxis(this.y, block.y) > -14) {
+                            speedX = 0;
+                            break;
+                        }
                     }
-                } else {
-                    onGround = false;
+                }
+            }
+
+            foreach (Block block in blocks) {
+                if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
+                    if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
+                        if (speedY > 0) {
+                            onGround = true;
+                            if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 14) {
+                                this.y = block.y - this.height;
+                            }
+                            break;
+                        } else {
+                            speedY = 0f;
+                            y += 0.4f;
+                            break;
+                        }
+                    } else {
+                        onGround = false;
+                    }
                 }
             }
             x += speedX;
-            //if (speedX < 0) {
-            //    foreach (Block block in blocks) {
-            //        if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
-            //            if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
-            //                speedX = 0;
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //if (speedX > 0) {
-            //    foreach (Block block in blocks) {
-            //        if (MathExtra.GetDistanceAxis(this.x, block.x) > -14 && MathExtra.GetDistanceAxis(this.x, block.x) < 14) {
-            //            if (MathExtra.GetDistanceAxis(this.y, block.y) < 14 && MathExtra.GetDistanceAxis(this.y, block.y) > -14) {
-            //                speedX = 0;
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //foreach (Block block in blocks) {
-            //    if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
-            //        if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-            //            if (speedY > 0) {
-            //                onGround = true;
-            //                if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 16) {
-            //                    this.y = block.y - this.height;
-            //                }
-            //                break;
-            //            } else {
-            //                speedY = 0f;
-            //                break;
-            //            }
-            //        } else {
-            //            onGround = false;
-            //        }
-            //    }
-            //}
         }
 
         public void Update(KeyboardState keyboardState, List<Block> blocks) {

@@ -24,8 +24,8 @@ namespace Defender {
 
         public bool onGround = false; 
         public float gravityForce = 0.0982f;
-        public float speedX = 0;
-        public float speedY = 0;
+        public float xSpeed = 0;
+        public float ySpeed = 0;
 
         Random r = new Random();
 
@@ -51,41 +51,53 @@ namespace Defender {
         }
 
         void Collision(List<Block> blocks) {
-            //foreach(Block block in blocks) {
-            //    if(MathExtra.PlayerBlockAABB(this, block)) {
-            //        Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width/2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
-            //        if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
-            //            if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
-            //                Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
-            //                bool direction; //false = left; true = right;
-            //                if(MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
-            //                    direction = false;
-            //                } else {
-            //                    direction = true;
-            //                }
-            //                if (speedX > 0 && !direction) {
-            //                    Console.WriteLine("Why can i move");
-            //                    speedX = 0;
-            //                }
-            //                if (speedX < 0 && direction) {
-            //                    speedX = 0;
-            //                }
-            //            }
-            //        }
+            foreach (Block block in blocks) {
+                if (MathExtra.PlayerBlockAABB(this, block)) {
+                    //Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
+                    //if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
+                    //    if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
+                    //        Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
+                    //        bool direction; //false = left; true = right;
+                    //        if (MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
+                    //            direction = false;
+                    //        } else {
+                    //            direction = true;
+                    //        }
+                    //        if (speedX > 0 && !direction) {
+                    //            Console.WriteLine("Why can i move");
+                    //            speedX = 0;
+                    //        }
+                    //        if (speedX < 0 && direction) {
+                    //            speedX = 0;
+                    //        }
+                    //    }
+                    //}
 
-            //        Console.WriteLine("Collision!");
+                    //Console.WriteLine("Collision!");
 
-            //        if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
-            //            this.y = block.y - this.height;
-            //            onGround = true;
-            //            break;
-            //        }
-            //    } else {
-            //        onGround = false;
-            //    }
-            //}
+                    //if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
+                    //    this.y = block.y - this.height;
+                    //    onGround = true;
+                    //    break;
+                    //}
+                    if(xSpeed > 0 && this.y <= block.y + block.height && this.y + this.height >= block.y) {
+                        xSpeed = 0;
+                    }
+                    if (xSpeed < 0 && this.y <= block.y + block.height && this.y + this.height >= block.y) {
+                        xSpeed = 0;
+                    }
+
+                    if (this.x < block.x + block.width && this.x + this.width > block.x) {
+                        onGround = true;
+                        this.y = MathExtra.Lerp(this.y, block.y - this.height, 0.25f);
+                    }
+                    break;
+                } else {
+                    onGround = false;
+                }
+            }
             //x += speedX;
-            if (speedX < 0) {
+            /*if (speedX < 0) {
                 foreach (Block block in blocks) {
                     if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
                         if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
@@ -125,27 +137,27 @@ namespace Defender {
                         onGround = false;
                     }
                 }
-            }
-            x += speedX;
+            }*/
+            x += xSpeed;
         }
 
         public void Update(KeyboardState keyboardState, List<Block> blocks) {
             if (keyboardState.IsKeyDown(Key.A)) {
-                speedX -= 0.5f;
+                xSpeed -= 0.5f;
             }
             if (keyboardState.IsKeyDown(Key.D)) {
-                speedX += 0.5f;
+                xSpeed += 0.5f;
             }
 
-            speedX = MathHelper.Clamp(speedX, -5, 5);
-            speedX = MathExtra.Lerp(speedX, 0, 0.2f);
+            xSpeed = MathHelper.Clamp(xSpeed, -5, 5);
+            xSpeed = MathExtra.Lerp(xSpeed, 0, 0.2f);
 
             Collision(blocks);
 
             if (!onGround) {
-                speedY += gravityForce;
+                ySpeed += gravityForce;
             } else {
-                speedY = 0;
+                ySpeed = 0;
             }
 
             if (keyboardState.IsKeyUp(Key.Space)) {
@@ -154,16 +166,16 @@ namespace Defender {
 
             if (!singleSpacePress && keyboardState.IsKeyDown(Key.Space) && onGround) {
                 singleSpacePress = true;
-                speedY -= 2;
+                ySpeed -= 2;
             }
 
-            if (speedY != 0) {
+            if (ySpeed != 0) {
                 onGround = false;
             } else {
                 onGround = true;
             }
             
-            y += speedY;
+            y += ySpeed;
         }
     }
 }

@@ -35,18 +35,18 @@ namespace Defender {
             float textureScale = this.width / (-this.width * this.width);
 
             GL.BindTexture(TextureTarget.Texture2D, textureID);
+            //GL.Begin(PrimitiveType.Triangles);
             GL.Begin(PrimitiveType.Triangles);
 
             GL.Color4(1f, 1f, 1f, 1f);
 
-            GL.TexCoord2(textureScale, textureScale);                       GL.Vertex2(x, y + height);
+            GL.TexCoord2(0, 0);                       GL.Vertex2(x, y + height);
             GL.TexCoord2(width * textureScale, height * textureScale);      GL.Vertex2(x + width, y);
-            GL.TexCoord2(textureScale, height * textureScale);              GL.Vertex2(x, y);
+            GL.TexCoord2(0, height * textureScale);              GL.Vertex2(x, y);
 
-            GL.TexCoord2(textureScale, textureScale);                       GL.Vertex2(x, y + height);
-            GL.TexCoord2(width * textureScale, textureScale);               GL.Vertex2(x + width, y + height);
+            GL.TexCoord2(0, 0);                       GL.Vertex2(x, y + height);
+            GL.TexCoord2(width * textureScale, 0);               GL.Vertex2(x + width, y + height);
             GL.TexCoord2(width * textureScale, height * textureScale);      GL.Vertex2(x + width, y);
-
             GL.End();
         }
 

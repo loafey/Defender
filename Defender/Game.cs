@@ -53,10 +53,10 @@ namespace Defender {
         private void MainWindow_KeyUp(object sender, KeyboardKeyEventArgs e) {}
 
         private void TextureInit() {
-            grassBlockSprite = ContentPipe.LoadTexture("Content/grass.png");
-            dirtBlockSprite = ContentPipe.LoadTexture("Content/dirt.png");
-            stoneBlockSprite = ContentPipe.LoadTexture("Content/stone.png");
-            testBlockSprite = ContentPipe.LoadTexture("Content/testTexture.png");
+            grassBlockSprite = ContentPipe.LoadTexture("Content/Blocks/grass.png");
+            dirtBlockSprite = ContentPipe.LoadTexture("Content/Blocks/dirt.png");
+            stoneBlockSprite = ContentPipe.LoadTexture("Content/Blocks/stone.png");
+            testBlockSprite = ContentPipe.LoadTexture("Content/Blocks/testTexture.png");
             playerSprite = ContentPipe.LoadTexture("Content/Player.png");
         }
 

@@ -1,0 +1,70 @@
+﻿<Window x:Class="Defender_Leveleditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Defender_Leveleditor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ToolBar Margin="0" VerticalAlignment="Top" ToolBarTray.IsLocked="True" RenderTransformOrigin="0.5,0.5" Background="#FFEEF5FD">
+            <ToolBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="1" ScaleX="1"/>
+                    <SkewTransform AngleY="0" AngleX="0"/>
+                    <RotateTransform Angle="0"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ToolBar.RenderTransform>
+            <Menu Height="15.5" VerticalAlignment="Top">
+                <MenuItem Header="File" Margin="0,0,0,-10" Padding="5,0">
+                    <MenuItem Header="Save" Margin="0,0,-11.993,0"/>
+                    <MenuItem Header="Save As" Margin="0,0,-11.994,0"/>
+                    <MenuItem Header="Load" Margin="0,0,-11.995,0"/>
+                    <MenuItem Header="Exit" Margin="0,0,-11.995,0"/>
+                </MenuItem>
+            </Menu>
+            <Menu Height="15.5" VerticalAlignment="Top">
+                <MenuItem Header="Edit" Margin="0,0,0,-10" Padding="5,0">
+                    <MenuItem Header="Undo" Margin="0,0,-11.993,0"/>
+                    <MenuItem Header="Redo" Margin="0,0,-11.994,0"/>
+                </MenuItem>
+            </Menu>
+            <Menu Height="15.5" VerticalAlignment="Top">
+                <MenuItem Header="View" Margin="0,0,0,-10" Padding="5,0">
+                    <MenuItem Header="Undo" Margin="0,0,-11.993,0"/>
+                    <MenuItem Header="Redo" Margin="0,0,-11.994,0"/>
+                </MenuItem>
+            </Menu>
+            <Menu Height="15.5" VerticalAlignment="Top">
+                <MenuItem Header="Info" Margin="0,0,0,-9" Padding="5,0">
+                    <MenuItem Header="Undo" Margin="0,0,-11.993,0"/>
+                    <MenuItem Header="Redo" Margin="0,0,-11.994,0"/>
+                </MenuItem>
+            </Menu>
+        </ToolBar>
+        <ScrollViewer  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="96,20.5,0,20.5" Background="#FFDED7D7">
+            <Canvas Width="2048" Height="2048">
+                <Canvas.Background>
+                    <DrawingBrush TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute">
+                        <DrawingBrush.Drawing>
+                            <GeometryDrawing>
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="0,0,50,50"/>
+                                </GeometryDrawing.Geometry>
+                                <GeometryDrawing.Pen>
+                                    <Pen Brush="#FF0F0F0F" Thickness="1"/>
+                                </GeometryDrawing.Pen>
+                            </GeometryDrawing>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Canvas.Background>
+            </Canvas>
+        </ScrollViewer>
+        <StatusBar Margin="0" VerticalAlignment="Bottom" Height="20.5">
+            <TextBlock x:Name="SelectedObject" HorizontalAlignment="Left" Height="20.5" TextWrapping="Wrap" Text="Selected object: None" VerticalAlignment="Top" Margin="0" Padding="0,0,10,0"/>
+        </StatusBar>
+        <ScrollViewer HorizontalAlignment="Left" Margin="0,20.5" Width="96"/>
+
+    </Grid>
+</Window>

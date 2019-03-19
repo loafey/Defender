@@ -113,7 +113,6 @@ namespace Defender {
                 if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
                     //if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16 && ySpeed > 0 ) {
                     if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
-                        Console.WriteLine(MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y));
                         if (ySpeed > 0) {
                             onGround = true;
                             if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 14) {
@@ -121,7 +120,6 @@ namespace Defender {
                             }
                         }
                         if(MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) > block.height) {
-                            Console.WriteLine("KUKA MIG");
                             y = MathExtra.Lerp(y, block.y + block.height, 0.5f);
                             ySpeed = Math.Abs(ySpeed) / 5;
                         }

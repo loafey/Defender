@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Defender", "Defender.csproj", "{025D63CD-DAE5-4A5E-B8E4-B8E0EEC7B2A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Defender", "Defender\Defender.csproj", "{025D63CD-DAE5-4A5E-B8E4-B8E0EEC7B2A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Defender Level Editor", "Defender Leveleditor\Defender Level Editor.csproj", "{19164066-31A8-447A-A44A-00E741237A24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{025D63CD-DAE5-4A5E-B8E4-B8E0EEC7B2A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{025D63CD-DAE5-4A5E-B8E4-B8E0EEC7B2A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{025D63CD-DAE5-4A5E-B8E4-B8E0EEC7B2A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19164066-31A8-447A-A44A-00E741237A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19164066-31A8-447A-A44A-00E741237A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19164066-31A8-447A-A44A-00E741237A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19164066-31A8-447A-A44A-00E741237A24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

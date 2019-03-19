@@ -80,6 +80,8 @@ namespace Defender {
 
 
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(1, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
+            blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(3, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(4, gridSize), MathExtra.GridLocation(0, gridSize), grassBlockSprite.ID, "Grass"));
             //blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(2, gridSize), MathExtra.GridLocation(1, gridSize), grassBlockSprite.ID, "Grass"));
             blockList.Add(new Block(gridSize, gridSize, MathExtra.GridLocation(0, gridSize), MathExtra.GridLocation(2, gridSize), grassBlockSprite.ID, "Grass"));

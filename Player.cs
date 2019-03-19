@@ -75,23 +75,13 @@ namespace Defender {
 
                     //Console.WriteLine("Collision!");
 
-                    //if (MathExtra.GetDistanceAxis(this.y, block.y) > -this.height && MathExtra.GetDistanceAxis(this.y, block.y) < -this.height + 2) {
-                    //    this.y = block.y - this.height;
-                    //    onGround = true;
-                    //    break;
-                    //}
-                    if(xSpeed > 0 && this.y <= block.y + block.height && this.y + this.height >= block.y) {
-                        xSpeed = 0;
-                    }
-                    if (xSpeed < 0 && this.y <= block.y + block.height && this.y + this.height >= block.y) {
-                        xSpeed = 0;
-                    }
-
-                    if (this.x < block.x + block.width && this.x + this.width > block.x) {
+                    // center if (this.x < block.x + block.width / 2 && this.x + this.width / 2 > block.x) {
+                    if (this.x > block.x && this.x < block.x + block.width) {
+                        //Console.WriteLine("AABB");
                         onGround = true;
                         this.y = MathExtra.Lerp(this.y, block.y - this.height, 0.25f);
+                        break;
                     }
-                    break;
                 } else {
                     onGround = false;
                 }

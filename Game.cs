@@ -73,7 +73,7 @@ namespace Defender {
 
             TextureInit();
             int gridSize = 16;
-            int landLength = 256;
+            int landLength = 128;
             int landStartingHeight = 256;
             int landHeight = 512;
             int dirtHeight = landHeight / 14;

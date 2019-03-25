@@ -29,19 +29,25 @@ namespace Defender_Leveleditor {
             FileInfo[] files = dInfo.GetFiles("*.png");
             foreach (FileInfo file in files) {
                 ListBoxItem fileItem = new ListBoxItem();
-                fileItem.Content = file.Name.Split('.')[0];
+                fileItem.Content = file.Name;
                 fileItem.Tag = file.FullName;
                 fileItem.MouseDoubleClick += new MouseButtonEventHandler(SelectBlockEvent);
                 blockList.Items.Add(fileItem);
             }
         }
 
-        void SelectBlockType(object sender) {
-            blockNameText.Text = sender.ToString().Split(':')[1];
-        }
-
         private void SelectBlockEvent(object sender, MouseButtonEventArgs e) {
-            SelectBlockType(sender);
+            blockNameText.Text = sender.ToString().Split(':')[1].Trim(' ');
+            foreach(ListBoxItem child in blockList.Items) {
+                if(blockNameText.Text.Equals(child.Content.ToString())) {
+                    blockLocationText.Text = child.Tag.ToString();
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.UriSource = new Uri(child.Tag.ToString());
+                    image.EndInit();
+                    imageBlock.Source = image;
+                }
+            }
         }
     }
 }

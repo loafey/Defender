@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,27 @@ namespace Defender_Leveleditor {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+            LoadBlocks();
+        }
+
+        void LoadBlocks() {
+            DirectoryInfo dInfo = new DirectoryInfo("Content/Blocks");
+            FileInfo[] files = dInfo.GetFiles("*.png");
+            foreach (FileInfo file in files) {
+                ListBoxItem fileItem = new ListBoxItem();
+                fileItem.Content = file.Name.Split('.')[0];
+                fileItem.Tag = file.FullName;
+                fileItem.MouseDoubleClick += new MouseButtonEventHandler(SelectBlockEvent);
+                blockList.Items.Add(fileItem);
+            }
+        }
+
+        void SelectBlockType(object sender) {
+            blockNameText.Text = sender.ToString().Split(':')[1];
+        }
+
+        private void SelectBlockEvent(object sender, MouseButtonEventArgs e) {
+            SelectBlockType(sender);
         }
     }
 }

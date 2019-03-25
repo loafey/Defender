@@ -43,7 +43,7 @@
                 </MenuItem>
             </Menu>
         </ToolBar>
-        <ScrollViewer  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="96,20.5,0,20.5" Background="#FFDED7D7">
+        <ScrollViewer  ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="96,20.5,0,130.5" Background="#FFDED7D7">
             <Canvas Width="2048" Height="2048">
                 <Canvas.Background>
                     <DrawingBrush TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute">
@@ -64,7 +64,26 @@
         <StatusBar Margin="0" VerticalAlignment="Bottom" Height="20.5">
             <TextBlock x:Name="SelectedObject" HorizontalAlignment="Left" Height="20.5" TextWrapping="Wrap" Text="Selected object: None" VerticalAlignment="Top" Margin="0" Padding="0,0,10,0"/>
         </StatusBar>
-        <ScrollViewer HorizontalAlignment="Left" Margin="0,20.5" Width="96"/>
+        <ScrollViewer HorizontalAlignment="Left" Margin="0,20.5" Width="96">
+            <ListBox x:Name="blockList"/>
+        </ScrollViewer>
+        <Grid Margin="96,0,0,20.5" OpacityMask="Black" Background="#FFEEEEEE" Height="110" VerticalAlignment="Bottom">
+            <GroupBox Header="Block" HorizontalAlignment="Left" Height="96" Margin="10,6,0,0" VerticalAlignment="Top">
+                <Image Margin="4" Source="Content/Blocks/grass.png">
+                    <Image.OpacityMask>
+                        <ImageBrush ImageSource="Content/Blocks/grass.png"/>
+                    </Image.OpacityMask>
+                </Image>
+            </GroupBox>
+            <TextBlock HorizontalAlignment="Left" Margin="111,18.5,10,0" TextWrapping="Wrap" Text="Block name: " VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="111,39.46,0,0" TextWrapping="Wrap" Text="Texture location: " VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="111,60.42,0,0" TextWrapping="Wrap" Text="X:" VerticalAlignment="Top"/>
+            <TextBox x:Name="xLocationText" HorizontalAlignment="Left" Height="15.96" Margin="129.247,60.42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="0" Background="#33FFFFFF" BorderThickness="0"/>
+            <TextBlock HorizontalAlignment="Left" Margin="111,81.38,0,0" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top"/>
+            <TextBox x:Name="yLocationText" HorizontalAlignment="Left" Height="15.96" Margin="129.247,81.38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="0" Background="#33FFFFFF" BorderThickness="0" RenderTransformOrigin="0.549,1.668"/>
+            <TextBlock x:Name="blockNameText" HorizontalAlignment="Left" Margin="178.007,18.5,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+            <TextBlock x:Name="blockLocationText" HorizontalAlignment="Left" Margin="200.76,39.46,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        </Grid>
 
     </Grid>
 </Window>

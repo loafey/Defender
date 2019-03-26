@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Defender_Leveleditor"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid KeyDown="DetectKeyPressOnWindow">
         <ToolBar Margin="0" VerticalAlignment="Top" ToolBarTray.IsLocked="True" RenderTransformOrigin="0.5,0.5" Background="#FFEEF5FD">
             <ToolBar.RenderTransform>
                 <TransformGroup>
@@ -62,14 +62,14 @@
             </Canvas>
         </ScrollViewer>
         <StatusBar Margin="0" VerticalAlignment="Bottom" Height="20.5">
-            <TextBlock x:Name="SelectedObject" HorizontalAlignment="Left" Height="20.5" TextWrapping="Wrap" Text="Selected object: None" VerticalAlignment="Top" Margin="0" Padding="0,0,10,0"/>
+            <TextBlock x:Name="SelectedObject" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Selected object: None" VerticalAlignment="Top" Margin="0,-3,0,0" Padding="0,0,10,0"/>
         </StatusBar>
         <ScrollViewer Margin="0,20.5" HorizontalAlignment="Left" Width="128">
             <ListBox x:Name="blockList"/>
         </ScrollViewer>
         <Grid Margin="128,0,0,20.5" OpacityMask="Black" Background="#FFEEEEEE" Height="110" VerticalAlignment="Bottom">
             <GroupBox Header="Block" HorizontalAlignment="Left" Height="96" Margin="10,6,0,0" VerticalAlignment="Top">
-                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="imageBlock" Margin="4" Source="dirt.png">
+                <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="imageBlock" Margin="4" Source="none.png">
                     <Image.OpacityMask>
                         <ImageBrush ImageSource="dirt.png"/>
                     </Image.OpacityMask>
@@ -81,8 +81,8 @@
             <TextBox x:Name="xLocationText" HorizontalAlignment="Left" Height="15.96" Margin="129.247,60.42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="0" Background="#33FFFFFF" BorderThickness="0"/>
             <TextBlock HorizontalAlignment="Left" Margin="111,81.38,0,0" TextWrapping="Wrap" Text="Y:" VerticalAlignment="Top"/>
             <TextBox x:Name="yLocationText" HorizontalAlignment="Left" Height="15.96" Margin="129.247,81.38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="0" Background="#33FFFFFF" BorderThickness="0" RenderTransformOrigin="0.549,1.668"/>
-            <TextBlock x:Name="blockNameText" HorizontalAlignment="Left" Margin="178.007,18.5,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-            <TextBlock x:Name="blockLocationText" HorizontalAlignment="Left" Margin="200.76,39.46,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+            <TextBlock x:Name="blockNameText" HorizontalAlignment="Left" Margin="178.007,18.5,0,0" TextWrapping="Wrap" Text="None" VerticalAlignment="Top"/>
+            <TextBlock x:Name="blockLocationText" HorizontalAlignment="Left" Margin="200.76,39.46,0,0" TextWrapping="Wrap" Text="None" VerticalAlignment="Top"/>
         </Grid>
 
     </Grid>

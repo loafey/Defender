@@ -19,6 +19,7 @@ namespace Defender_Leveleditor {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        string selectedBlock = "";
         public MainWindow() {
             InitializeComponent();
             CheckFolderExistance();
@@ -46,6 +47,11 @@ namespace Defender_Leveleditor {
             }
         }
 
+        void SetSelectedBlock(string Block) {
+            selectedBlock = Block;
+            SelectedObject.Text = "Selected object: " + Block;
+        }
+
         private void SelectBlockEvent(object sender, MouseButtonEventArgs e) {
             blockNameText.Text = sender.ToString().Split(':')[1].Trim(' ');
             foreach(ListBoxItem child in blockList.Items) {
@@ -54,6 +60,22 @@ namespace Defender_Leveleditor {
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
                     image.UriSource = new Uri(child.Tag.ToString());
+                    image.EndInit();
+                    imageBlock.Source = image;
+                    SetSelectedBlock(blockNameText.Text.Split('.')[0]);
+                }
+            }
+        }
+
+        private void DetectKeyPressOnWindow(object sender, KeyEventArgs e) {
+            if (Keyboard.IsKeyDown(Key.Escape)) {
+                if(selectedBlock != "None") { 
+                    SetSelectedBlock("None");
+                    blockLocationText.Text = "None";
+                    blockNameText.Text = "None";
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.UriSource = new Uri(System.IO.Path.GetFullPath("Content/none.png"));
                     image.EndInit();
                     imageBlock.Source = image;
                 }

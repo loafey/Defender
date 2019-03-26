@@ -21,7 +21,17 @@ namespace Defender_Leveleditor {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
+            CheckFolderExistance();
             LoadBlocks();
+        }
+
+        void CheckFolderExistance() {
+            if (!Directory.Exists("Content/Levels")) {
+                Directory.CreateDirectory("Content/Levels");
+            }
+            if (!Directory.Exists("Content/Blocks")) {
+                Directory.CreateDirectory("Content/Blocks");
+            }
         }
 
         void LoadBlocks() {

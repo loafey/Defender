@@ -19,7 +19,9 @@ namespace Defender_Leveleditor {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        string selectedBlock = "";
+        string selectedBlock = "None";
+        int gridSize = 16;
+        List<BlockInfo> blockInfoList = new List<BlockInfo>();
         public MainWindow() {
             InitializeComponent();
             CheckFolderExistance();
@@ -78,6 +80,48 @@ namespace Defender_Leveleditor {
                     image.UriSource = new Uri(System.IO.Path.GetFullPath("Content/none.png"));
                     image.EndInit();
                     imageBlock.Source = image;
+                }
+            }
+        }
+
+        private static float GridSnap(float n, float snap) {
+            return (float)Math.Round((n / (float)snap), MidpointRounding.AwayFromZero) * snap; 
+        }
+
+        private void LevelCanvasLeftDown(object sender, MouseButtonEventArgs e) {
+            if(selectedBlock != "None") {
+                bool samePos = false;
+                int mouseX = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).X - gridSize / 2, gridSize);
+                int mouseY = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).Y - gridSize / 2, gridSize);
+
+                foreach (BlockInfo b in blockInfoList) {
+                    if(mouseX == b.x && mouseY == b.y) {
+                        samePos = true;
+                        break;
+                    }
+                }
+                if (!samePos) {
+                    Rectangle block = new Rectangle();
+                    block.Width = 16;
+                    block.Height = 16;
+
+                    block.Fill = new ImageBrush(new BitmapImage(
+                        new Uri(blockLocationText.Text)));
+
+                    levelCanvas.Children.Add(block);
+
+                    Canvas.SetLeft(block, mouseX);
+                    Canvas.SetTop(block, mouseY);
+
+                    BlockInfo blockInfo = new BlockInfo(
+                        mouseX,
+                        mouseY,
+                        blockLocationText.Text,
+                        blockInfoList.Count,
+                        block
+                    );
+
+                    blockInfoList.Add(blockInfo);
                 }
             }
         }

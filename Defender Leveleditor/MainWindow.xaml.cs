@@ -69,6 +69,12 @@ namespace Defender_Leveleditor {
             }
         }
 
+        private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
+            if (selectedBlock == "None") {
+                levelCanvas.Children.Remove((UIElement)sender);
+            }
+        }
+
         private void DetectKeyPressOnWindow(object sender, KeyEventArgs e) {
             if (Keyboard.IsKeyDown(Key.Escape)) {
                 if(selectedBlock != "None") { 
@@ -89,39 +95,47 @@ namespace Defender_Leveleditor {
         }
 
         private void LevelCanvasLeftDown(object sender, MouseButtonEventArgs e) {
-            if(selectedBlock != "None") {
-                bool samePos = false;
-                int mouseX = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).X - gridSize / 2, gridSize);
-                int mouseY = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).Y - gridSize / 2, gridSize);
+           
+        }
 
-                foreach (BlockInfo b in blockInfoList) {
-                    if(mouseX == b.x && mouseY == b.y) {
-                        samePos = true;
-                        break;
+        private void LevelCanvasMouseMoving(object sender, MouseEventArgs e) {
+            if (Mouse.LeftButton == MouseButtonState.Pressed) {
+                if (selectedBlock != "None") {
+                    bool samePos = false;
+                    int mouseX = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).X - gridSize / 2, gridSize);
+                    int mouseY = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).Y - gridSize / 2, gridSize);
+
+                    foreach (BlockInfo b in blockInfoList) {
+                        if (mouseX == b.x && mouseY == b.y) {
+                            samePos = true;
+                            break;
+                        }
                     }
-                }
-                if (!samePos) {
-                    Rectangle block = new Rectangle();
-                    block.Width = 16;
-                    block.Height = 16;
+                    if (!samePos) {
+                        Rectangle block = new Rectangle();
+                        block.Width = 16;
+                        block.Height = 16;
 
-                    block.Fill = new ImageBrush(new BitmapImage(
-                        new Uri(blockLocationText.Text)));
+                        block.Fill = new ImageBrush(new BitmapImage(
+                            new Uri(blockLocationText.Text)));
 
-                    levelCanvas.Children.Add(block);
+                        levelCanvas.Children.Add(block);
 
-                    Canvas.SetLeft(block, mouseX);
-                    Canvas.SetTop(block, mouseY);
+                        Canvas.SetLeft(block, mouseX);
+                        Canvas.SetTop(block, mouseY);
 
-                    BlockInfo blockInfo = new BlockInfo(
-                        mouseX,
-                        mouseY,
-                        blockLocationText.Text,
-                        blockInfoList.Count,
-                        block
-                    );
+                        BlockInfo blockInfo = new BlockInfo(
+                            mouseX,
+                            mouseY,
+                            blockLocationText.Text,
+                            blockInfoList.Count,
+                            block
+                        );
 
-                    blockInfoList.Add(blockInfo);
+                        block.MouseDown += ClickBlockEvent;
+
+                        blockInfoList.Add(blockInfo);
+                    }
                 }
             }
         }

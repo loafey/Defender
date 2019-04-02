@@ -44,7 +44,7 @@
             </Menu>
         </ToolBar>
         <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="128,20.5,0,130.5" Background="#FFDED7D7">
-            <Canvas x:Name="levelCanvas" Width="2048" Height="2048" MouseLeftButtonDown="LevelCanvasLeftDown">
+            <Canvas x:Name="levelCanvas" Width="2048" Height="2048" MouseLeftButtonDown="LevelCanvasLeftDown" MouseMove="LevelCanvasMouseMoving">
                 <Canvas.Background>
                     <DrawingBrush TileMode="Tile" Viewport="0,0,16,16" ViewportUnits="Absolute">
                         <DrawingBrush.Drawing>

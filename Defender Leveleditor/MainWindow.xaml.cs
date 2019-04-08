@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace Defender_Leveleditor {
     /// <summary>
@@ -41,9 +42,10 @@ namespace Defender_Leveleditor {
             DirectoryInfo dInfo = new DirectoryInfo("Content/Blocks");
             FileInfo[] files = dInfo.GetFiles("*.png");
             foreach (FileInfo file in files) {
-                ListBoxItem fileItem = new ListBoxItem();
-                fileItem.Content = file.Name;
-                fileItem.Tag = file.FullName;
+                ListBoxItem fileItem = new ListBoxItem {
+                    Content = file.Name,
+                    Tag = file.FullName
+                };
                 fileItem.MouseDoubleClick += new MouseButtonEventHandler(SelectBlockEvent);
                 blockList.Items.Add(fileItem);
             }
@@ -70,8 +72,21 @@ namespace Defender_Leveleditor {
         }
 
         private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
-            if (selectedBlock == "None") {
-                levelCanvas.Children.Remove((UIElement)sender);
+            if (selectedBlock == "None")
+            {
+                Rectangle rect = (Rectangle)sender;
+                if((int)rect.Tag > blockInfoList.Count) {
+                    blockInfoList.RemoveAt(blockInfoList.Count - 1);
+                } else {
+                    blockInfoList.RemoveAt((int)rect.Tag);
+                }
+
+                try {
+                    levelCanvas.Children.Remove((Rectangle)sender);
+                } catch (IndexOutOfRangeException error) {
+                    MessageBox.Show(error.ToString());
+                    return;
+                }
             }
         }
 
@@ -112,12 +127,13 @@ namespace Defender_Leveleditor {
                         }
                     }
                     if (!samePos) {
-                        Rectangle block = new Rectangle();
-                        block.Width = 16;
-                        block.Height = 16;
+                        Rectangle block = new Rectangle {
+                            Width = 16,
+                            Height = 16,
 
-                        block.Fill = new ImageBrush(new BitmapImage(
-                            new Uri(blockLocationText.Text)));
+                            Fill = new ImageBrush(new BitmapImage(
+                            new Uri(blockLocationText.Text)))
+                        };
 
                         levelCanvas.Children.Add(block);
 
@@ -133,11 +149,28 @@ namespace Defender_Leveleditor {
                         );
 
                         block.MouseDown += ClickBlockEvent;
+                        block.Tag = blockInfo.arrayIndex;
 
                         blockInfoList.Add(blockInfo);
                     }
                 }
             }
+        }
+
+        private void FileMenuSaveButton(object sender, MouseButtonEventArgs e) {
+
+        }
+
+        private void FileMenuSaveAsButton(object sender, MouseButtonEventArgs e) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+        }
+
+        private void FileMenuLoadButton(object sender, MouseButtonEventArgs e) {
+
+        }
+
+        private void FileMenuExitButton(object sender, MouseButtonEventArgs e) {
+            this.Close();
         }
     }
 }

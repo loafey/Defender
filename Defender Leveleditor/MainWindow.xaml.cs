@@ -44,11 +44,11 @@ namespace Defender_Leveleditor {
             foreach (FileInfo file in files) {
                 ListBoxItem fileItem = new ListBoxItem {
                     Content = file.Name,
-                    Tag = file.FullName
+                    Tag = file.FullName//relativePath.MakeRelativeUri(referencePath).ToString()
                 };
                 fileItem.MouseDoubleClick += new MouseButtonEventHandler(SelectBlockEvent);
                 blockList.Items.Add(fileItem);
-            }
+            };
         }
 
         void SetSelectedBlock(string Block) {
@@ -72,8 +72,7 @@ namespace Defender_Leveleditor {
         }
 
         private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
-            if (selectedBlock == "None")
-            {
+            if (selectedBlock == "None") {
                 Rectangle rect = (Rectangle)sender;
                 if((int)rect.Tag > blockInfoList.Count) {
                     blockInfoList.RemoveAt(blockInfoList.Count - 1);
@@ -163,10 +162,27 @@ namespace Defender_Leveleditor {
 
         private void FileMenuSaveAsButton(object sender, MouseButtonEventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if(saveFileDialog.ShowDialog() == true) {
+                string textFile = "";
+                foreach(BlockInfo block in blockInfoList) {
+                    Uri relativePath = new Uri(block.texture);
+                    Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
+                    textFile += block.x + "|";
+                    textFile += block.y + "|";
+                    textFile += referencePath.MakeRelativeUri(relativePath).ToString();
+                    textFile += ";\n";
+                }
+                File.WriteAllText(saveFileDialog.FileName, textFile);
+                textFile = "";
+            }
         }
 
         private void FileMenuLoadButton(object sender, MouseButtonEventArgs e) {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if(openFileDialog.ShowDialog() == true) {
+                levelCanvas.Children.RemoveRange(0, levelCanvas.Children.Count);
+                blockInfoList.Clear();
+            }
         }
 
         private void FileMenuExitButton(object sender, MouseButtonEventArgs e) {

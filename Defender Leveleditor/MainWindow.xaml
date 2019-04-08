@@ -20,7 +20,7 @@
                 <MenuItem Header="File" Margin="0,0,0,-10" Padding="5,0">
                     <MenuItem Header="Save" Margin="0,0,-11.993,0" MouseDown="FileMenuSaveButton"/>
                     <MenuItem Header="Save As" Margin="0,0,-11.994,0" MouseDown="FileMenuSaveAsButton" PreviewMouseDown="FileMenuSaveAsButton"/>
-                    <MenuItem Header="Load" Margin="0,0,-11.995,0" MouseDown="FileMenuLoadButton"/>
+                    <MenuItem Header="Load" Margin="0,0,-11.995,0" MouseDown="FileMenuLoadButton" PreviewMouseDown="FileMenuLoadButton"/>
                     <MenuItem Header="Exit" Margin="0,0,-11.995,0" MouseDown="FileMenuExitButton" PreviewMouseDown="FileMenuExitButton"/>
                 </MenuItem>
             </Menu>

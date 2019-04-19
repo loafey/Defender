@@ -66,21 +66,21 @@ namespace Defender_Leveleditor {
             }
         }
 
+        //TODO Removing a block removes the wrong blocks in the backend when using crash funky 1!!.
         private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
             if (selectedBlock == "None") {
+                Console.WriteLine("Crash 1?");
                 Rectangle rect = (Rectangle)sender;
                 if ((int)rect.Tag > blockInfoList.Count) {
-                    blockInfoList.RemoveAt(blockInfoList.Count - 1);
+                    Console.WriteLine("Crash fucky 1?");
+                    blockInfoList.Remove(blockInfoList[(int)rect.Tag]);
                 } else {
+                    Console.WriteLine("Crash fucky 2?");
                     blockInfoList.RemoveAt((int)rect.Tag);
                 }
-
-                try {
-                    levelCanvas.Children.Remove((Rectangle)sender);
-                } catch (IndexOutOfRangeException error) {
-                    MessageBox.Show(error.ToString());
-                    return;
-                }
+                Console.WriteLine("Crash 2?");
+                levelCanvas.Children.Remove((Rectangle)sender);
+                Console.WriteLine("Crash 3?");
             }
         }
 

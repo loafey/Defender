@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.IO;
 
 namespace Defender_Leveleditor {
     /// <summary>
@@ -22,6 +21,7 @@ namespace Defender_Leveleditor {
     public partial class MainWindow : Window {
         string selectedBlock = "None";
         int gridSize = 16;
+        string loadedFile = "";
         List<BlockInfo> blockInfoList = new List<BlockInfo>();
         public MainWindow() {
             InitializeComponent();
@@ -58,8 +58,8 @@ namespace Defender_Leveleditor {
 
         private void SelectBlockEvent(object sender, MouseButtonEventArgs e) {
             blockNameText.Text = sender.ToString().Split(':')[1].Trim(' ');
-            foreach(ListBoxItem child in blockList.Items) {
-                if(blockNameText.Text.Equals(child.Content.ToString())) {
+            foreach (ListBoxItem child in blockList.Items) {
+                if (blockNameText.Text.Equals(child.Content.ToString())) {
                     blockLocationText.Text = child.Tag.ToString();
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
@@ -74,15 +74,17 @@ namespace Defender_Leveleditor {
         private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
             if (selectedBlock == "None") {
                 Rectangle rect = (Rectangle)sender;
-                if((int)rect.Tag > blockInfoList.Count) {
+                if ((int)rect.Tag > blockInfoList.Count) {
                     blockInfoList.RemoveAt(blockInfoList.Count - 1);
-                } else {
+                }
+                else {
                     blockInfoList.RemoveAt((int)rect.Tag);
                 }
 
                 try {
                     levelCanvas.Children.Remove((Rectangle)sender);
-                } catch (IndexOutOfRangeException error) {
+                }
+                catch (IndexOutOfRangeException error) {
                     MessageBox.Show(error.ToString());
                     return;
                 }
@@ -91,7 +93,7 @@ namespace Defender_Leveleditor {
 
         private void DetectKeyPressOnWindow(object sender, KeyEventArgs e) {
             if (Keyboard.IsKeyDown(Key.Escape)) {
-                if(selectedBlock != "None") { 
+                if (selectedBlock != "None") {
                     SetSelectedBlock("None");
                     blockLocationText.Text = "None";
                     blockNameText.Text = "None";
@@ -105,11 +107,11 @@ namespace Defender_Leveleditor {
         }
 
         private static float GridSnap(float n, float snap) {
-            return (float)Math.Round((n / (float)snap), MidpointRounding.AwayFromZero) * snap; 
+            return (float)Math.Round((n / (float)snap), MidpointRounding.AwayFromZero) * snap;
         }
 
         private void LevelCanvasLeftDown(object sender, MouseButtonEventArgs e) {
-           
+
         }
 
         private void LevelCanvasMouseMoving(object sender, MouseEventArgs e) {
@@ -162,11 +164,12 @@ namespace Defender_Leveleditor {
 
         private void FileMenuSaveAsButton(object sender, MouseButtonEventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            if(saveFileDialog.ShowDialog() == true) {
+            if (saveFileDialog.ShowDialog() == true) {
                 string textFile = "";
-                foreach(BlockInfo block in blockInfoList) {
+                foreach (BlockInfo block in blockInfoList) {
                     Uri relativePath = new Uri(block.texture);
                     Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
+                    textFile += "block|";
                     textFile += block.x + "|";
                     textFile += block.y + "|";
                     textFile += referencePath.MakeRelativeUri(relativePath).ToString();
@@ -174,12 +177,14 @@ namespace Defender_Leveleditor {
                 }
                 File.WriteAllText(saveFileDialog.FileName, textFile);
                 textFile = "";
+                loadedFile = saveFileDialog.FileName;
+                this.Title = "Defender Editor - " + loadedFile;
             }
         }
 
         private void FileMenuLoadButton(object sender, MouseButtonEventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            if(openFileDialog.ShowDialog() == true) {
+            if (openFileDialog.ShowDialog() == true) {
                 levelCanvas.Children.RemoveRange(0, levelCanvas.Children.Count);
                 blockInfoList.Clear();
             }

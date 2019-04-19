@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Defender_Leveleditor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Defender Editor" Height="450" Width="800">
     <Grid KeyDown="DetectKeyPressOnWindow">
         <ToolBar Margin="0" VerticalAlignment="Top" ToolBarTray.IsLocked="True" RenderTransformOrigin="0.5,0.5" Background="#FFEEF5FD">
             <ToolBar.RenderTransform>

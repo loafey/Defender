@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.IO;
 
 namespace Defender_Leveleditor {
     /// <summary>
@@ -76,15 +71,13 @@ namespace Defender_Leveleditor {
                 Rectangle rect = (Rectangle)sender;
                 if ((int)rect.Tag > blockInfoList.Count) {
                     blockInfoList.RemoveAt(blockInfoList.Count - 1);
-                }
-                else {
+                } else {
                     blockInfoList.RemoveAt((int)rect.Tag);
                 }
 
                 try {
                     levelCanvas.Children.Remove((Rectangle)sender);
-                }
-                catch (IndexOutOfRangeException error) {
+                } catch (IndexOutOfRangeException error) {
                     MessageBox.Show(error.ToString());
                     return;
                 }
@@ -117,49 +110,31 @@ namespace Defender_Leveleditor {
         private void LevelCanvasMouseMoving(object sender, MouseEventArgs e) {
             if (Mouse.LeftButton == MouseButtonState.Pressed) {
                 if (selectedBlock != "None") {
-                    bool samePos = false;
                     int mouseX = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).X - gridSize / 2, gridSize);
                     int mouseY = (int)GridSnap((float)Mouse.GetPosition(levelCanvas).Y - gridSize / 2, gridSize);
 
-                    foreach (BlockInfo b in blockInfoList) {
-                        if (mouseX == b.x && mouseY == b.y) {
-                            samePos = true;
-                            break;
-                        }
-                    }
-                    if (!samePos) {
-                        Rectangle block = new Rectangle {
-                            Width = 16,
-                            Height = 16,
-
-                            Fill = new ImageBrush(new BitmapImage(
-                            new Uri(blockLocationText.Text)))
-                        };
-
-                        levelCanvas.Children.Add(block);
-
-                        Canvas.SetLeft(block, mouseX);
-                        Canvas.SetTop(block, mouseY);
-
-                        BlockInfo blockInfo = new BlockInfo(
-                            mouseX,
-                            mouseY,
-                            blockLocationText.Text,
-                            blockInfoList.Count,
-                            block
-                        );
-
-                        block.MouseDown += ClickBlockEvent;
-                        block.Tag = blockInfo.arrayIndex;
-
-                        blockInfoList.Add(blockInfo);
-                    }
+                    PlaceBlock(mouseX, mouseY, blockLocationText.Text);
                 }
             }
         }
 
         private void FileMenuSaveButton(object sender, MouseButtonEventArgs e) {
-
+            if (loadedFile == "") {
+                FileMenuSaveAsButton(sender, e);
+            } else {
+                string textFile = "";
+                foreach (BlockInfo block in blockInfoList) {
+                    Uri relativePath = new Uri(block.texture);
+                    Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
+                    textFile += "block|";
+                    textFile += block.x + "|";
+                    textFile += block.y + "|";
+                    textFile += referencePath.MakeRelativeUri(relativePath).ToString();
+                    textFile += ";\n";
+                }
+                File.WriteAllText(loadedFile, textFile);
+                textFile = "";
+            }
         }
 
         private void FileMenuSaveAsButton(object sender, MouseButtonEventArgs e) {
@@ -185,10 +160,64 @@ namespace Defender_Leveleditor {
         private void FileMenuLoadButton(object sender, MouseButtonEventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true) {
+                loadedFile = openFileDialog.FileName;
+                this.Title = "Denfender Editor - " + loadedFile;
                 levelCanvas.Children.RemoveRange(0, levelCanvas.Children.Count);
                 blockInfoList.Clear();
+
+                LevelInfo levelInfo = FileHandler.OpenFile(
+                    System.IO.Path.GetFullPath(openFileDialog.FileName)
+                );
+
+                foreach(Block block in levelInfo.blocks) {
+                    /*Console.WriteLine(block.x);
+                    Console.WriteLine(block.y);
+                    Console.WriteLine(block.textureLocation);
+                    Console.WriteLine("");*/
+                    PlaceBlock(block.x, block.y, System.IO.Path.GetFullPath(block.textureLocation));
+
+                }
             }
         }
+
+        private void PlaceBlock(int X, int Y, string BlockTexture) {
+            bool samePos = false;
+
+            foreach (BlockInfo b in blockInfoList) {
+                if (X == b.x && Y == b.y) {
+                    samePos = true;
+                    break;
+                }
+            }
+            if (!samePos) {
+                Rectangle block = new Rectangle {
+                    Width = 16,
+                    Height = 16,
+
+                    Fill = new ImageBrush(new BitmapImage(
+                    new Uri(BlockTexture)))
+                };
+
+                levelCanvas.Children.Add(block);
+
+                Canvas.SetLeft(block, X);
+                Canvas.SetTop(block, Y);
+
+                BlockInfo blockInfo = new BlockInfo(
+                    X,
+                    Y,
+                    BlockTexture,
+                    blockInfoList.Count,
+                    block
+                );
+
+                block.MouseDown += ClickBlockEvent;
+                block.Tag = blockInfo.arrayIndex;
+
+                blockInfoList.Add(blockInfo);
+            }
+        }
+
 
         private void FileMenuExitButton(object sender, MouseButtonEventArgs e) {
             this.Close();

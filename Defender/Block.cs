@@ -21,9 +21,8 @@ namespace Defender {
             this.blockType = BlockType;
         }
 
-        public float textureScale = 0.0313f * 2;
-
         public void Draw() {
+            float textureScale = width / (-width * width);
             GL.BindTexture(TextureTarget.Texture2D, textureID);
             GL.Begin(PrimitiveType.Triangles);
 

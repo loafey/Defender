@@ -51,42 +51,7 @@ namespace Defender {
         }
 
         void Collision(List<Block> blocks) {
-            /*foreach (Block block in blocks) {
-                if (MathExtra.PlayerBlockAABB(this, block)) {
-                    //Console.WriteLine("Collision x:{0} y:{1}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2), MathExtra.GetDistanceAxis(this.y, block.y));
-                    //if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < this.width) {
-                    //    if (MathExtra.GetDistanceAxisAbs(this.y + this.height / 2, block.y + block.height / 2) < this.height / 2) {
-                    //        Console.WriteLine("Collision stand on side {0}", MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2));
-                    //        bool direction; //false = left; true = right;
-                    //        if (MathExtra.GetDistanceAxis(this.x + this.width / 2, block.x + block.width / 2) < 0) {
-                    //            direction = false;
-                    //        } else {
-                    //            direction = true;
-                    //        }
-                    //        if (speedX > 0 && !direction) {
-                    //            Console.WriteLine("Why can i move");
-                    //            speedX = 0;
-                    //        }
-                    //        if (speedX < 0 && direction) {
-                    //            speedX = 0;
-                    //        }
-                    //    }
-                    //}
-
-                    //Console.WriteLine("Collision!");
-
-                    // center if (this.x < block.x + block.width / 2 && this.x + this.width / 2 > block.x) {
-                    if (this.x + this.width > block.x && this.x < block.x + block.width) {
-                        //Console.WriteLine("AABB");
-                        onGround = true;
-                        this.y = MathExtra.Lerp(this.y, block.y - this.height, 0.25f);
-                        break;
-                    }
-                } else {
-                    onGround = false;
-                }
-            }*/
-            //x += speedX;
+            /*
             if (xSpeed < 0) {
                 foreach (Block block in blocks) {
                     if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
@@ -120,6 +85,46 @@ namespace Defender {
                             }
                         }
                         if(MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) > block.height) {
+                            y = MathExtra.Lerp(y, block.y + block.height, 0.5f);
+                            ySpeed = Math.Abs(ySpeed) / 5;
+                        }
+                        break;
+                    } else {
+                        onGround = false;
+                    }
+                }
+            }
+            x += xSpeed;
+            */
+            foreach (Block block in blocks) {
+                if (xSpeed < 0) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) > 0 && MathExtra.GetDistanceAxis(this.x, block.x) < 16) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 12 && MathExtra.GetDistanceAxis(this.y, block.y) > -12) {
+                            xSpeed = 0;
+                            break;
+                        }
+                    }
+                }
+
+                if (xSpeed > 0) {
+                    if (MathExtra.GetDistanceAxis(this.x, block.x) > -16 && MathExtra.GetDistanceAxis(this.x, block.x) < 0) {
+                        if (MathExtra.GetDistanceAxis(this.y, block.y) < 14 && MathExtra.GetDistanceAxis(this.y, block.y) > -14) {
+                            xSpeed = 0;
+                            break;
+                        }
+                    }
+                }
+
+                if (MathExtra.GetDistanceAxisAbs(this.x + this.width / 2, block.x + block.width / 2) < 14) {
+                    //if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16 && ySpeed > 0 ) {
+                    if (MathExtra.GetDistanceAxisAbs(this.y, block.y) < 16) {
+                        if (ySpeed > 0) {
+                            onGround = true;
+                            if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) < 14) {
+                                y = MathExtra.Lerp(y, block.y - this.height, 0.5f);
+                            }
+                        }
+                        if (MathExtra.GetDistanceAxisAbs(this.y + this.height, block.y) > block.height) {
                             y = MathExtra.Lerp(y, block.y + block.height, 0.5f);
                             ySpeed = Math.Abs(ySpeed) / 5;
                         }

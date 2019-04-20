@@ -17,7 +17,6 @@ namespace Defender_Leveleditor {
         string selectedBlock = "None";
         int gridSize = 16;
         string loadedFile = "";
-        List<BlockInfo> blockInfoList = new List<BlockInfo>();
         public MainWindow() {
             InitializeComponent();
             CheckFolderExistance();
@@ -69,18 +68,8 @@ namespace Defender_Leveleditor {
         //TODO Removing a block removes the wrong blocks in the backend when using crash funky 1!!.
         private void ClickBlockEvent(object sender, MouseButtonEventArgs e) {
             if (selectedBlock == "None") {
-                Console.WriteLine("Crash 1?");
                 Rectangle rect = (Rectangle)sender;
-                if ((int)rect.Tag > blockInfoList.Count) {
-                    Console.WriteLine("Crash fucky 1?");
-                    blockInfoList.Remove(blockInfoList[(int)rect.Tag]);
-                } else {
-                    Console.WriteLine("Crash fucky 2?");
-                    blockInfoList.RemoveAt((int)rect.Tag);
-                }
-                Console.WriteLine("Crash 2?");
                 levelCanvas.Children.Remove((Rectangle)sender);
-                Console.WriteLine("Crash 3?");
             }
         }
 
@@ -123,14 +112,18 @@ namespace Defender_Leveleditor {
                 FileMenuSaveAsButton(sender, e);
             } else {
                 string textFile = "";
-                foreach (BlockInfo block in blockInfoList) {
-                    Uri relativePath = new Uri(block.texture);
-                    Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
-                    textFile += "block|";
-                    textFile += block.x + "|";
-                    textFile += block.y + "|";
-                    textFile += referencePath.MakeRelativeUri(relativePath).ToString();
-                    textFile += ";\n";
+                foreach (object objects in levelCanvas.Children) {
+                    Rectangle block = (Rectangle)objects;
+                    if (block.Tag.ToString().Split('|')[0] == "block") {
+                        Uri relativePath = new Uri(block.Tag.ToString().Split('|')[1]);
+                        Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
+                        Point relativePoint = block.TransformToAncestor(levelCanvas).Transform(new Point(0, 0));
+                        textFile += "block|";
+                        textFile += relativePoint.X + "|";
+                        textFile += relativePoint.Y + "|";
+                        textFile += referencePath.MakeRelativeUri(relativePath).ToString();
+                        textFile += ";\n";
+                    }
                 }
                 File.WriteAllText(loadedFile, textFile);
                 textFile = "";
@@ -139,16 +132,23 @@ namespace Defender_Leveleditor {
 
         private void FileMenuSaveAsButton(object sender, MouseButtonEventArgs e) {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Ondth World Operator files (*.owo)|*.owo";
+            saveFileDialog.DefaultExt = "owo";
+            saveFileDialog.AddExtension = true;
             if (saveFileDialog.ShowDialog() == true) {
                 string textFile = "";
-                foreach (BlockInfo block in blockInfoList) {
-                    Uri relativePath = new Uri(block.texture);
-                    Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
-                    textFile += "block|";
-                    textFile += block.x + "|";
-                    textFile += block.y + "|";
-                    textFile += referencePath.MakeRelativeUri(relativePath).ToString();
-                    textFile += ";\n";
+                foreach (object objects in levelCanvas.Children) {
+                    Rectangle block = (Rectangle)objects;
+                    if(block.Tag.ToString().Split('|')[0] == "block") {
+                        Uri relativePath = new Uri(block.Tag.ToString().Split('|')[1]);
+                        Uri referencePath = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location);
+                        Point relativePoint = block.TransformToAncestor(levelCanvas).Transform(new Point(0, 0));
+                        textFile += "block|";
+                        textFile += relativePoint.X + "|";
+                        textFile += relativePoint.Y + "|";
+                        textFile += referencePath.MakeRelativeUri(relativePath).ToString();
+                        textFile += ";\n";
+                    }
                 }
                 File.WriteAllText(saveFileDialog.FileName, textFile);
                 textFile = "";
@@ -159,11 +159,13 @@ namespace Defender_Leveleditor {
 
         private void FileMenuLoadButton(object sender, MouseButtonEventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Ondth World Operator files (*.owo)|*.owo";
+            openFileDialog.DefaultExt = "owo";
+            openFileDialog.AddExtension = true;
             if (openFileDialog.ShowDialog() == true) {
                 loadedFile = openFileDialog.FileName;
                 this.Title = "Denfender Editor - " + loadedFile;
                 levelCanvas.Children.RemoveRange(0, levelCanvas.Children.Count);
-                blockInfoList.Clear();
 
                 LevelInfo levelInfo = FileHandler.OpenFile(
                     System.IO.Path.GetFullPath(openFileDialog.FileName)
@@ -183,8 +185,12 @@ namespace Defender_Leveleditor {
         private void PlaceBlock(int X, int Y, string BlockTexture) {
             bool samePos = false;
 
-            foreach (BlockInfo b in blockInfoList) {
-                if (X == b.x && Y == b.y) {
+            foreach (object b in levelCanvas.Children) {
+                Rectangle block = (Rectangle)b;
+                Point relativePoint = block.TransformToAncestor(levelCanvas).Transform(new Point(0, 0));
+
+
+                if (X == relativePoint.X && Y == relativePoint.Y) {
                     samePos = true;
                     break;
                 }
@@ -203,18 +209,8 @@ namespace Defender_Leveleditor {
                 Canvas.SetLeft(block, X);
                 Canvas.SetTop(block, Y);
 
-                BlockInfo blockInfo = new BlockInfo(
-                    X,
-                    Y,
-                    BlockTexture,
-                    blockInfoList.Count,
-                    block
-                );
-
                 block.MouseDown += ClickBlockEvent;
-                block.Tag = blockInfo.arrayIndex;
-
-                blockInfoList.Add(blockInfo);
+                block.Tag = "block|" + BlockTexture;
             }
         }
 
